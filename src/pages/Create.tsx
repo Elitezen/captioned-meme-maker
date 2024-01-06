@@ -1,7 +1,10 @@
 import { ChangeEvent, useEffect, useState, useRef } from "react";
 import '../App.scss';
-import './Create.module.scss';
+import styles from './Create.module.scss';
 import { Link } from "react-router-dom";
+
+// @ts-ignore
+import pngFileStream from 'png-file-stream';
 
 export default function Create() {
 	const STARTING_TEXT_VALUE = 'Enter Text';
@@ -41,10 +44,13 @@ export default function Create() {
 			canvas.height = newHeight;
 
 			// Get 2D context
-			const ctx = canvas.getContext('2d')!;
+			const ctx = canvas.getContext('2d')!;			
 
-			// Draw the image on the canvas
-			ctx.drawImage(img, 0, newHeight - img.height, img.width, img.height);
+			if (selectedFile.name.toLowerCase().endsWith('.gif')) {
+				
+			} else {
+				ctx.drawImage(img, 0, newHeight - img.height, img.width, img.height);
+			}
 
 			// Draw the white border on top
 			ctx.fillStyle = 'white';
@@ -62,8 +68,7 @@ export default function Create() {
 				text: string,
 				x: number,
 				y: number,
-				maxWidth: number,
-				maxHeight: number
+				maxWidth: number
 			  ) => {
 				const words = text.split(' ');
 				let line = '';
@@ -110,7 +115,7 @@ export default function Create() {
 
 			// Calculate the center coordinates relative to the white border
 			const centerX = newWidth / 2;
-			const centerY = (newHeight - img.height) / 2 + (img.height * 0.04);
+			const centerY = ((newHeight - img.height) / 2 + (img.height * 0.04)) - img.height * 0.015;
 
 			// Wrap, center, and draw the text
 			wrapAndCenterText(
@@ -118,8 +123,7 @@ export default function Create() {
 				textInput,
 				centerX,
 				centerY,
-				newWidth - (img.width * 0.1),
-				(newHeight - img.height) / 2 - (img.height * 0.04)
+				newWidth - (img.width * 0.1)
 			  );
 
 			// Convert canvas to data URL and set it as the result image URL
@@ -142,7 +146,12 @@ export default function Create() {
 					<Link to="/create">Create new meme</Link>
 				</>
 			) : (
-				<input type="file" onChange={handleFileChange} />
+				<>
+					<label htmlFor="file-upload" className={styles.imageInput}>
+						Custom Upload
+					</label>
+					<input type="file" onChange={handleFileChange} id="image-upload"/>
+				</>
 			)}
 		</main>
 	);

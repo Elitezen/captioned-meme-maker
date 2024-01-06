@@ -17,8 +17,8 @@ const router = createBrowserRouter([
   {
     path: "/create",
     element: <Create />
-  }
-]);
+  },
+], { basename: '/captioned-meme-maker/' });
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
